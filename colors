@@ -4,7 +4,7 @@ if [ "$1" = "-fg" ]; then
     where=38
 elif [ "$1" = "-bg" ]; then
     where=48
-elif [ "$1" = "-term" ]; then
+elif [ "$1" = "-bash" ]; then
     echo
     echo Table for 16-color terminal escape sequences.
     echo Prefix with \033 in bash.
@@ -31,7 +31,7 @@ elif [ "$1" = "-term" ]; then
     echo
     exit 1
 else
-    echo "Please specify -fg, -bg, or -term."
+    echo "Please specify -fg, -bg, or -bash."
     exit 1
 fi
 
