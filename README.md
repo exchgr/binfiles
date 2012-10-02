@@ -3,7 +3,7 @@
 binfiles is a repo containing my bash hacks. So far, it's just one: colors.
 
 # colors
-colors is a shell file that pretty-prints out all the colors your terminal can show. It includes relevant numbers like the 256-color code or the bash escape sequence. It requires a *very wide terminal*, so you'd better maximize that buddy. It has three modes:
+colors is a shell script that pretty-prints out all the colors your terminal can show. It includes relevant numbers like the 256-color code or the bash escape sequence. It requires a *very wide terminal*, so you'd better maximize that buddy. Colors has three modes:
 
 ## -fg
 Prints 256 colors. Shows the color on the numbers themselves.
