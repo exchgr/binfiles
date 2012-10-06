@@ -1,0 +1,3 @@
+[submodule "tmux-session-manager"]
+	path = tmux-session-manager
+	url = git://github.com/chriskempson/tmux-session-manager.git
