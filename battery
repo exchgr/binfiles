@@ -1,0 +1,5 @@
+#!/bin/bash
+
+echo -n "["
+ioreg -l | grep -i capacity | tr '\n' ' | ' | awk '{printf("%.0f%%", $10/$5 * 100)}'
+echo -n "]"
