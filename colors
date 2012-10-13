@@ -7,7 +7,7 @@ elif [ "$1" = "-bg" ]; then
 elif [ "$1" = "-term" ]; then
     echo
     echo Table for 16-color terminal escape sequences.
-    echo Prefix with \033 in bash.
+    echo Prefix with \\033 in bash.
     echo
     echo " bg  | fg codes"
     echo "-----+--------------------------------------------------------"
