@@ -1,3 +1,3 @@
-#!/bin/bash
+#!/usr/bin/env ruby
 
-ioreg -l | grep -i capacity | tr '\n' ' | ' | awk '{printf("%.0f%%", $10/$5 * 100)}'
+puts ("%i%%%s" % `pmset -g ps`.scan(/(\d+)%; (\w*);/).flatten).gsub("discharging", "-").gsub("charging", "+").gsub("charged", "=")
