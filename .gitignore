@@ -2,3 +2,6 @@ reattach-to-user-namespace
 subl
 qtfaststart
 osx-cpu-temp
+jenkins-cli.jar
+dvtcolorconvert.rb
+tm2iterm
