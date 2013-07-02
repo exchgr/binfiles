@@ -1,3 +1,4 @@
 #!/bin/bash
 
-find . -name "*.orig" -exec rm {} \;
+find . -type d -empty \! -path './.git/*' -exec rmdir {} \; -print
+find . \( -name '*.swp' -or -name '*.swo' -or -name '*~' -or -name '*.orig' \) -exec rm {} \; -print
