@@ -2,19 +2,22 @@
 # exch: exchange two files
 
 usage() {
-  echo "Usage: exch file1 file2"
+  echo "Usage: exch file1 file2" >&2
+  exit 1
 }
 
 # Check if files exist and if we have write permissions
 errors=0
 if [ $# = 2 ]; then
   for arg in $@; do
-    if [ ! -f $arg ]; then
+    if [ ! -f "$arg" ]; then
       echo "Error: file '$arg' doesn't exist."
       let "errors++"
-    elif [ ! -w $arg ]; then
+    elif [ ! -w "$arg" ]; then
       echo "Error: You don't have write permissions for file '$arg'."
       let "errors++"
+    elif [ ! -w $(dirname "$arg") ]; then
+      echo "Error: you don't have write permissions for directory '$(dirname "$arg")'."
     fi
   done
 else
@@ -27,4 +30,7 @@ if [ "$errors" -gt 0 ]; then
   usage
 fi
 
-
+# exch the files
+mv $1 "$(dirname $1)/_____tmp"
+mv $2 $1
+mv "$(dirname $1)/_____tmp" $2
