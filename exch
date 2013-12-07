@@ -1,0 +1,30 @@
+#!/bin/bash
+# exch: exchange two files
+
+usage() {
+  echo "Usage: exch file1 file2"
+}
+
+# Check if files exist and if we have write permissions
+errors=0
+if [ $# = 2 ]; then
+  for arg in $@; do
+    if [ ! -f $arg ]; then
+      echo "Error: file '$arg' doesn't exist."
+      let "errors++"
+    elif [ ! -w $arg ]; then
+      echo "Error: You don't have write permissions for file '$arg'."
+      let "errors++"
+    fi
+  done
+else
+  echo "Wrong number of arguments. You may only exch two files."
+  let "errors++"
+fi
+
+# if there were errors, say how to use the program.
+if [ "$errors" -gt 0 ]; then
+  usage
+fi
+
+
