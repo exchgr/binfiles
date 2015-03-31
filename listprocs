@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+
+processes = `awk '{print $1}' Procfile | sed 's/://'`.split("\n")
+
+processes.map! do |process|
+  process = `ps ax | ag #{process}`.split("\n")
+
+  # Don't match the matcher!
+  process.select! do |p|
+    !p.match(/ag/)
+  end
+end
+
+puts processes
