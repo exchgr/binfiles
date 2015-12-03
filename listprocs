@@ -12,4 +12,4 @@ processes.map! do |process|
   end
 end
 
-puts processes.compact!
+puts processes.compact
