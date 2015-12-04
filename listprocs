@@ -3,7 +3,7 @@
 processes = `awk '{print $1}' Procfile | sed 's/://'`.split("\n")
 
 processes.map! do |process|
-  next if process.match /^#/ || process.empty?
+  next if process.match(/^#/) || process.empty?
   process = `ps ax | ag #{process}`.split("\n")
 
   # Don't match the matcher!
