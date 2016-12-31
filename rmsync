@@ -1,5 +1,5 @@
 BLANK=$(mktemp -d)/
 DIR=$(echo $* | sed 's/-rf//g')
 
-rsync -av --delete $BLANK $DIR
+rsync -av --delete-before $BLANK $DIR
 rmdir $DIR
