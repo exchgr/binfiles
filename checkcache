@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+COMMAND="watch \""
+
+for URL in $@; do
+  COMMAND="$COMMAND echo $URL && time http -ph $URL | ag Age\|X-Cache\|HTTP && echo \"---------\" &&"
+done
+
+COMMAND="$COMMAND echo\""
+
+eval $COMMAND
