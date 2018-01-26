@@ -3,7 +3,7 @@
 COMMAND="watch \""
 
 for URL in $@; do
-  COMMAND="$COMMAND echo $URL && time http -ph $URL | ag Age\|X-Cache\|HTTP && echo \"---------\" &&"
+  COMMAND="$COMMAND echo $URL && time http -ph $URL | ag Age\|X-Cache\|HTTP\|Etag\|Cache-Control && echo \"---------\" &&"
 done
 
 COMMAND="$COMMAND echo\""
