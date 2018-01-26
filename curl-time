@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+curl -w "@$HOME/bin/curl-metrics" -o /dev/null -s "$@"
