@@ -11,7 +11,7 @@ def parse_options(options)
       opts.banner =
 """resize images to a constant aspect ratio
 
-Centers images on the canvas and adds a white letterbox.
+Centers images on the canvas and adds a letterbox.
 Thanks to Instagram's restrictive posting interface
 for inspiring this utility.
 
@@ -56,6 +56,13 @@ Options
       )
 
       opts.on(
+        "-c <color>",
+        "--color <color>",
+        "Letterbox color (defaults to 'White' for Instagram)",
+        String
+      )
+
+      opts.on(
         "--help",
         "Print this help text"
       ) do
@@ -72,6 +79,10 @@ def out_directory
   OPTS[:dir] || "out"
 end
 
+def color
+  OPTS[:color] || "White"
+end
+
 def identify_dimensions(filename)
   `identify -format "%w#{DIMENSIONS_DELIMITER}%h" "#{filename}"`
 end
@@ -83,7 +94,7 @@ end
 def convert_dimensions(file)
   "convert \"#{file[:filename]}\" " +
     "-resize #{dimensions_to_s(file[:dimensions])} " +
-    "-background White " +
+    "-background #{color} " +
     "-gravity center " +
     "-extent #{dimensions_to_s(file[:dimensions])} " +
     "\"#{out_directory}/#{file[:filename]}\" && " +
