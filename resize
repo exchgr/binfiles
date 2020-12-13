@@ -25,11 +25,11 @@ Files:
 2.png: 4000x6000
 
 Command:
-resize -w 4 -h 5 *.png
+resize -w 4 -h 5 -d output *.png
 
 Yields:
-out/1.png: 6000x7500
-out/2.png: 4800x6000
+output/1.png: 6000x7500
+output/2.png: 4800x6000
 
 Options
 =======
@@ -49,6 +49,13 @@ Options
       end
 
       opts.on(
+        "-d <directory>",
+        "--dir <directory>",
+        "Output directory (defaults to 'out')",
+        String
+      )
+
+      opts.on(
         "--help",
         "Print this help text"
       ) do
@@ -60,6 +67,10 @@ Options
 end
 
 OPTS = parse_options(ARGV)
+
+def out_directory
+  OPTS[:dir] || "out"
+end
 
 def identify_dimensions(filename)
   `identify -format "%w#{DIMENSIONS_DELIMITER}%h" "#{filename}"`
@@ -75,7 +86,7 @@ def convert_dimensions(file)
     "-background White " +
     "-gravity center " +
     "-extent #{dimensions_to_s(file[:dimensions])} " +
-    "\"out/#{file[:filename]}\" && " +
+    "\"#{out_directory}/#{file[:filename]}\" && " +
 
   "exiftool " +
     "-tagsFromFile \"#{file[:filename]}\" " +
