@@ -91,7 +91,7 @@ def dimensions_to_s(dimensions)
   "#{dimensions[:width]}#{DIMENSIONS_DELIMITER}#{dimensions[:height]}"
 end
 
-def convert_dimensions(file)
+def convert_command(file)
   "convert \"#{file[:filename]}\" " +
     "-resize #{dimensions_to_s(file[:dimensions])} " +
     "-background #{color} " +
@@ -155,7 +155,7 @@ Parallel.each(
   ARGV
   .map(&method(:dimensions))
   .map(&method(:new_dimensions))
-  .map(&method(:convert_dimensions))
+  .map(&method(:convert_command))
 ) do |command|
   command
     .tap(&method(:puts))
