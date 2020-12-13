@@ -58,7 +58,7 @@ Options
       opts.on(
         "-c <color>",
         "--color <color>",
-        "Letterbox color (defaults to 'White' for Instagram)",
+        "Letterbox color (defaults to 'white' for Instagram)",
         String
       )
 
@@ -80,7 +80,7 @@ def dir
 end
 
 def color
-  OPTS[:color] || "White"
+  OPTS[:color] || "white"
 end
 
 def identify_dimensions(filename)
