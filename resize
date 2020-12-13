@@ -1,0 +1,76 @@
+#!/usr/bin/env ruby
+# USAGE:
+# ./resize.rb <dividend> <divisor> <file...>
+
+require 'parallel'
+
+DIMENSIONS_DELIMITER="x"
+DIVIDEND = ARGV.shift.to_f
+DIVISOR = ARGV.shift.to_f
+
+def identify_dimensions(file)
+  `identify -format "%w#{DIMENSIONS_DELIMITER}%h" "#{file}"`
+end
+
+def dimensions_to_s(dimensions)
+  "#{dimensions[:width]}#{DIMENSIONS_DELIMITER}#{dimensions[:height]}"
+end
+
+def convert_dimensions(file)
+  "convert \"#{file[:filename]}\" -resize #{dimensions_to_s(file[:dimensions])} -background White -gravity center -extent #{dimensions_to_s(file[:dimensions])} \"out/#{file[:filename]}\""
+end
+
+# yields this schema:
+# {
+#   filename: "filename",
+#   dimensions: {
+#     width: 1234,
+#     height: 1234
+#   }
+# }
+def dimensions(filename)
+  {filename: filename}.merge(dimensions: Hash[
+    [:width, :height].zip(
+      identify_dimensions(filename)
+      .split(DIMENSIONS_DELIMITER)
+      .map(&:to_i)
+    )
+  ]).tap(&method(:puts))
+end
+
+def max_dimension(dimensions)
+  dimensions.key(dimensions.values.max)
+end
+
+def min_dimension(dimensions)
+  dimensions.key(dimensions.values.min)
+end
+
+def conversion_factor(key)
+  {
+    width: DIVIDEND/DIVISOR,
+    height: DIVISOR/DIVIDEND
+  }[key]
+end
+
+def new_dimensions(file)
+  file.merge({
+    dimensions: file[:dimensions].merge({
+      :"#{min_dimension(file[:dimensions])}" => (
+        file[:dimensions][max_dimension(file[:dimensions])] *
+        conversion_factor(max_dimension(file[:dimensions]))
+      ).to_i
+    })
+  })
+end
+
+Parallel.each(
+  ARGV
+  .map(&method(:dimensions))
+  .map(&method(:new_dimensions))
+  .map(&method(:convert_dimensions))
+) { |command|
+  command
+    .tap(&method(:puts))
+    .tap(&method(:`))
+}
