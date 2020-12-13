@@ -17,7 +17,19 @@ def dimensions_to_s(dimensions)
 end
 
 def convert_dimensions(file)
-  "convert \"#{file[:filename]}\" -resize #{dimensions_to_s(file[:dimensions])} -background White -gravity center -extent #{dimensions_to_s(file[:dimensions])} \"out/#{file[:filename]}\""
+  "convert \"#{file[:filename]}\" " +
+    "-resize #{dimensions_to_s(file[:dimensions])} " +
+    "-background White " +
+    "-gravity center " +
+    "-extent #{dimensions_to_s(file[:dimensions])} " +
+    "\"out/#{file[:filename]}\" && " +
+
+  "exiftool " +
+    "-tagsFromFile \"#{file[:filename]}\" " +
+    "-All:All " +
+    "-IFD1:All " +
+    "-overwrite_original " +
+    "\"out/#{file[:filename]}\""
 end
 
 # yields this schema:
