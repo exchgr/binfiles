@@ -130,7 +130,26 @@ def dimensions(filename)
       .split(DIMENSIONS_DELIMITER)
       .map(&:to_i)
     )
-  ]).tap(&method(:puts))
+  ])
+end
+
+def max_filename_length(files)
+  @max_filename_length ||= files
+    .map { |file| file[:filename] }
+    .map(&:length)
+    .max
+end
+
+def dimensions_template(files)
+  "%-#{max_filename_length(files)}s\t%s\n"
+end
+
+def puts_dimensions(files)
+  printf(dimensions_template(files), "File", "Dimensions")
+  files.map do |file|
+    printf(dimensions_template(files), file[:filename], "#{file[:dimensions][:width]}#{DIMENSIONS_DELIMITER}#{file[:dimensions][:height]}")
+  end
+  puts
 end
 
 def max_dimension(dimensions)
@@ -168,6 +187,7 @@ end
 Parallel.each(
   ARGV
   .map(&method(:dimensions))
+  .tap(&method(:puts_dimensions))
   .map(&method(:new_dimensions))
   .map(&method(:convert_command)),
   &method(:print_and_run)
