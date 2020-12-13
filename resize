@@ -3,7 +3,12 @@
 require 'parallel'
 require 'optparse'
 
-DIMENSIONS_DELIMITER="x"
+DIMENSIONS_DELIMITER = "x"
+
+RATIO_OPTS = {
+  w: :width,
+  h: :height,
+}
 
 def parse_options(options)
   {}.tap do |args|
@@ -36,10 +41,7 @@ Options
 
 """
 
-      {
-        w: :width,
-        h: :height,
-      }.each do |short, long|
+      RATIO_OPTS.each do |short, long|
         opts.on(
           "-#{short} <ratio_#{long}>",
           "--#{long} <ratio_#{long}>",
@@ -81,6 +83,12 @@ end
 
 def color
   OPTS[:color] || "white"
+end
+
+RATIO_OPTS.each do |short, long|
+  define_method(long) do
+    OPTS[long] || puts("Error: required option \"-#{short}\" or \"--#{long}\" missing") & exit(1)
+  end
 end
 
 def identify_dimensions(filename)
@@ -135,8 +143,8 @@ end
 
 def conversion_factor(key)
   {
-    width: OPTS[:height]/OPTS[:width],
-    height: OPTS[:width]/OPTS[:height]
+    width: height/width,
+    height: width/height
   }[key]
 end
 
