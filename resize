@@ -75,7 +75,7 @@ end
 
 OPTS = parse_options(ARGV)
 
-def out_directory
+def dir
   OPTS[:dir] || "out"
 end
 
@@ -97,14 +97,14 @@ def convert_dimensions(file)
     "-background #{color} " +
     "-gravity center " +
     "-extent #{dimensions_to_s(file[:dimensions])} " +
-    "\"#{out_directory}/#{file[:filename]}\" && " +
+    "\"#{dir}/#{file[:filename]}\" && " +
 
   "exiftool " +
     "-tagsFromFile \"#{file[:filename]}\" " +
     "-All:All " +
     "-IFD1:All " +
     "-overwrite_original " +
-    "\"out/#{file[:filename]}\""
+    "\"#{dir}/#{file[:filename]}\""
 end
 
 # yields this schema:
