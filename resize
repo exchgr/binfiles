@@ -1,15 +1,68 @@
 #!/usr/bin/env ruby
-# USAGE:
-# ./resize.rb <dividend> <divisor> <file...>
 
 require 'parallel'
+require 'optparse'
 
 DIMENSIONS_DELIMITER="x"
-DIVIDEND = ARGV.shift.to_f
-DIVISOR = ARGV.shift.to_f
 
-def identify_dimensions(file)
-  `identify -format "%w#{DIMENSIONS_DELIMITER}%h" "#{file}"`
+def parse_options(options)
+  {}.tap do |args|
+    OptionParser.new do |opts|
+      opts.banner =
+"""resize images to a constant aspect ratio
+
+Centers images on the canvas and adds a white letterbox.
+Thanks to Instagram's restrictive posting interface
+for inspiring this utility.
+
+Usage: resize <options> <file1> [<file2> ...]
+
+Example
+=======
+
+Files:
+1.png: 6000x4000
+2.png: 4000x6000
+
+Command:
+resize -w 4 -h 5 *.png
+
+Yields:
+out/1.png: 6000x7500
+out/2.png: 4800x6000
+
+Options
+=======
+
+"""
+
+      {
+        w: :width,
+        h: :height,
+      }.each do |short, long|
+        opts.on(
+          "-#{short} <ratio_#{long}>",
+          "--#{long} <ratio_#{long}>",
+          "The aspect ratio's #{long}",
+          Float
+        )
+      end
+
+      opts.on(
+        "--help",
+        "Print this help text"
+      ) do
+        puts opts
+        exit
+      end
+    end.parse!(options, into: args)
+  end
+end
+
+OPTS = parse_options(ARGV)
+
+def identify_dimensions(filename)
+  `identify -format "%w#{DIMENSIONS_DELIMITER}%h" "#{filename}"`
 end
 
 def dimensions_to_s(dimensions)
@@ -60,8 +113,8 @@ end
 
 def conversion_factor(key)
   {
-    width: DIVIDEND/DIVISOR,
-    height: DIVISOR/DIVIDEND
+    width: OPTS[:height]/OPTS[:width],
+    height: OPTS[:width]/OPTS[:height]
   }[key]
 end
 
@@ -81,8 +134,8 @@ Parallel.each(
   .map(&method(:dimensions))
   .map(&method(:new_dimensions))
   .map(&method(:convert_dimensions))
-) { |command|
+) do |command|
   command
     .tap(&method(:puts))
     .tap(&method(:`))
-}
+end
