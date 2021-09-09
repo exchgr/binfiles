@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+require 'parallel'
+
+def composite_command(arg)
+  "magick \"#{arg}\" watermark.png -resize %[fx:u[0].w]x -gravity center -composite \"out/#{arg}\""
+end
+
+def print_and_run(shell_command)
+  shell_command
+    .tap(&method(:puts))
+    .tap(&method(:`))
+end
+
+Parallel.each(
+  ARGV.map(&method(:composite_command)),
+  &method(:print_and_run)
+)
