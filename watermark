@@ -3,7 +3,11 @@
 require 'parallel'
 
 def composite_command(arg)
-  "magick \"#{arg}\" watermark.png -resize %[fx:u[0].w]x -gravity center -composite \"out/#{arg}\""
+  "magick \"#{arg}\" watermark.png -resize 650x650 -resize %[fx:u[0].w]x -gravity center -composite \"out/#{chomp_extension(arg)}.jpg\""
+end
+
+def chomp_extension(filename)
+  File.basename(filename, File.extname(filename))
 end
 
 def print_and_run(shell_command)
