@@ -205,14 +205,12 @@ def print_and_run(shell_command)
     .tap(&method(:`))
 end
 
-Parallel.each(
-  Parallel.map(ARGV) do |arg|
-    [arg]
-      .map(&method(:dimensions))
-      .tap(&method(:puts_dimensions))
-      .map(&method(:new_dimensions))
-      .map(&method(:limit_width))
-      .map(&method(:convert_command)).first
-  end,
-  &method(:print_and_run)
-)
+Parallel.each(ARGV) do |arg|
+  [arg]
+    .map(&method(:dimensions))
+    .tap(&method(:puts_dimensions))
+    .map(&method(:new_dimensions))
+    .map(&method(:limit_width))
+    .map(&method(:convert_command))
+    .each(&method(:print_and_run))
+end
